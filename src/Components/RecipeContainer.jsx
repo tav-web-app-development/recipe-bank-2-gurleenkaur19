@@ -1,102 +1,103 @@
 import { useState } from "react";
 
 /* eslint-disable react/prop-types */
-function RecipeContainer({ recipe, deleteFromArray }) {
+function RecipeContainer({ recipe, deleteFromArray, updateArray }) {
   const [editButton, setEditButton] = useState(true);
-  const editText = editButton ? "Edit" : "Save";
-  const [insertRecipe, setInsertRecipe] = useState(recipe);
+  const [recipeTemp, setRecipeTemp] = useState(recipe);
 
-  function deleteButton(id) {
-    document.getElementById(id).remove();
-  }
   function handleChange(e, key) {
-    setInsertRecipe({ ...insertRecipe, [key]: e.target.value });
+    setRecipeTemp({ ...recipeTemp, [key]: e.target.value });
   }
+
+  const handleButtonClick = () => {
+    setEditButton(!editButton);
+    if (!editButton) {
+      updateArray(recipeTemp);
+    }
+  };
 
   return (
     <>
       <div
         className="recipe-container"
         onClick={() => {
-          document.title = recipe.title;
+          document.title = recipeTemp.title;
         }}
-        id={recipe.id}
       >
         <div className="recipe">
-          <h2>{recipe.title}</h2>
+          <h2>{recipeTemp.title}</h2>
           <div>
-            <button onClick={() => setEditButton(!editButton)}>
-              {editText}
+            <button onClick={() => handleButtonClick()}>
+              {editButton ? "Edit" : "Save"}
             </button>
             <button
               onClick={(e) => {
-                deleteFromArray(insertRecipe.id);
+                deleteFromArray(recipeTemp.id);
               }}
             >
               Delete
             </button>
           </div>
-          {editButton ? (
-            <p>
-              <strong>Description:</strong>
-              {insertRecipe.description}
-            </p>
-          ) : (
-            <>
-              Description:{" "}
-              <textarea
-                rows={5}
-                cols={75}
-                type="text"
-                defaultValue={insertRecipe.description}
-                onChange={(e) => {
-                  handleChange(e, "description");
-                }}
-              />
-            </>
-          )}
-          <br />
-          {editButton ? (
-            <p>
-              <strong>Ingredients:</strong> {insertRecipe.ingredients}
-            </p>
-          ) : (
-            <>
-              Ingredients:
-              <textarea
-                rows={5}
-                cols={75}
-                type="text"
-                defaultValue={insertRecipe.ingredients}
-                onChange={(e) => {
-                  handleChange(e, "ingredients");
-                }}
-              />
-            </>
-          )}
-          <br />
-          {editButton ? (
-            <p>
-              <strong>Directions:</strong> {insertRecipe.directions}
-            </p>
-          ) : (
-            <>
-              Directions:
-              <textarea
-                rows={5}
-                cols={75}
-                type="text"
-                defaultValue={insertRecipe.directions}
-                onChange={(e) => {
-                  handleChange(e, "directions");
-                }}
-              />
-            </>
-          )}
-          <br />
+          <p>
+            {editButton ? (
+              <>
+                <strong>Description:{recipeTemp.description}</strong>
+              </>
+            ) : (
+              <>
+                Description :
+                <textarea
+                  rows={3}
+                  cols={80}
+                  defaultValue={recipeTemp.description}
+                  onChange={(e) => {
+                    handleChange(e, "description");
+                  }}
+                />
+              </>
+            )}
+          </p>
+          <p>
+            {editButton ? (
+              <>
+                <strong>Ingredients:</strong> {recipeTemp.ingredients}
+              </>
+            ) : (
+              <>
+                Ingredients :
+                <textarea
+                  rows={10}
+                  cols={80}
+                  defaultValue={recipeTemp.ingredients}
+                  onChange={(e) => {
+                    handleChange(e, "ingredients");
+                  }}
+                />
+              </>
+            )}
+          </p>
+          <p>
+            {editButton ? (
+              <>
+                <strong>Directions:</strong> {recipeTemp.directions}
+              </>
+            ) : (
+              <>
+                Directions :
+                <textarea
+                  rows={20}
+                  cols={80}
+                  defaultValue={recipeTemp.directions}
+                  onChange={(e) => {
+                    handleChange(e, "directions");
+                  }}
+                />
+              </>
+            )}
+          </p>
           <img
-            src={recipe.photoUrl}
-            alt={recipe.title}
+            src={recipeTemp.photoUrl}
+            alt={recipeTemp.title}
             width={300}
             height={300}
           />
